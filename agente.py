@@ -2,7 +2,7 @@ import networkx as nx
 import random
 import matplotlib.pyplot as plt
 
-# Función para crear un grafo completo aleatorio con distancias entre nodos
+# Función para crear un grafo aleatorio con n nodos
 def crear_grafo(n):
     G = nx.Graph()
     G.add_nodes_from(range(1, n + 1))
@@ -11,9 +11,6 @@ def crear_grafo(n):
         for v in G.nodes():
             if u != v and not G.has_edge(u, v):
                 G.add_edge(u, v, distancia=random.randint(1, 100))  # Distancias aleatorias
-    
-    if (nx.is_directed(G)):
-        print("Es completo")
     
     return G
 
@@ -34,7 +31,7 @@ def agente_viajero_busqueda_aleatoria(G, iteraciones):
     peor_ruta = nodos[:]
     peor_longitud = mejor_longitud
 
-    rutas_probadas = []
+    rutas_probadas = [] #Almacena las rutas probadas
 
     for _ in range(iteraciones):
         # Generar una ruta aleatoria
@@ -58,13 +55,16 @@ def agente_viajero_busqueda_aleatoria(G, iteraciones):
 
     return mejor_ruta, mejor_longitud, peor_ruta, peor_longitud, rutas_probadas
 
-# Crear un grafo aleatorio con 8 nodos
+# Crear un grafo aleatorio con 8 nodos (el valor se puede cambiar)
 nodos = 8
 grafo = crear_grafo(nodos)
 
 # Resolver el problema del agente viajero
 ruta_optima, longitud_optima, peor_ruta, longitud_peor, rutas_probadas = agente_viajero_busqueda_aleatoria(grafo, 10000)
 
+
+
+#-------------------- Sirve para visualizar el grafo -------------------#
 # Visualizar el grafo y la ruta óptima
 pos = nx.spring_layout(grafo)
 nx.draw(grafo, pos, with_labels=True)
