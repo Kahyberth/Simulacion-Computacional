@@ -1,16 +1,25 @@
 import networkx as nx
-import matplotlib.pyplot as plt
 import random
+import matplotlib.pyplot as plt
 
-# Crear un grafo completo aleatorio con distancias entre nodos
-def crear_grafo_completo_aleatorio(n):
-    G = nx.complete_graph(n)
-    for u, v in G.edges():
-        if u != v:
-            G[u][v]['distancia'] = random.randint(1, 100)  # Distancias aleatorias
+# Función para crear un grafo completo aleatorio con distancias entre nodos
+def crear_grafo(n):
+    G = nx.Graph()
+    G.add_nodes_from(range(1, n + 1))
+    
+    for u in G.nodes():
+        for v in G.nodes():
+            if u != v and not G.has_edge(u, v):
+                G.add_edge(u, v, distancia=random.randint(1, 100))  # Distancias aleatorias
+    
+    if (nx.is_directed(G)):
+        print("Es completo")
+    
     return G
 
-# Calcular la longitud de una ruta
+
+
+# Función para calcular la longitud de una ruta
 def calcular_longitud_ruta(G, ruta):
     longitud = 0
     for i in range(len(ruta) - 1):
@@ -32,8 +41,8 @@ def agente_viajero_busqueda_aleatoria(G, iteraciones):
         ruta_actual = nodos[:]
         random.shuffle(ruta_actual)
 
-        # Calcular la longitud de la ruta actual
-        longitud_actual = calcular_longitud_ruta(G, ruta_actual)
+        # Calcular la longitud de la ruta actual (agregando el nodo de inicio al final)
+        longitud_actual = calcular_longitud_ruta(G, ruta_actual + [ruta_actual[0]])
 
         # Actualizar la mejor ruta si es necesario
         if longitud_actual < mejor_longitud:
@@ -49,9 +58,9 @@ def agente_viajero_busqueda_aleatoria(G, iteraciones):
 
     return mejor_ruta, mejor_longitud, peor_ruta, peor_longitud, rutas_probadas
 
-# Crear un grafo aleatorio con 5 nodos (puedes cambiar el número de nodos)
-nodos = 5
-grafo = crear_grafo_completo_aleatorio(nodos)
+# Crear un grafo aleatorio con 8 nodos
+nodos = 8
+grafo = crear_grafo(nodos)
 
 # Resolver el problema del agente viajero
 ruta_optima, longitud_optima, peor_ruta, longitud_peor, rutas_probadas = agente_viajero_busqueda_aleatoria(grafo, 10000)
@@ -68,3 +77,4 @@ print("Ruta óptima:", ruta_optima)
 print("Longitud óptima:", longitud_optima)
 print("Peor ruta:", peor_ruta)
 print("Longitud peor ruta:", longitud_peor)
+#print("Rutas probadas:", rutas_probadas)
